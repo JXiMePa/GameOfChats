@@ -17,6 +17,7 @@
 		6BE2931220E0E94A001F2602 /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE2931120E0E94A001F2602 /* NewMessageController.swift */; };
 		6BE2931420E0F001001F2602 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE2931320E0F001001F2602 /* User.swift */; };
 		6BE2931720E105DE001F2602 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE2931620E105DE001F2602 /* UserCell.swift */; };
+		6BE2931920E10C86001F2602 /* LoginController+ handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE2931820E10C86001F2602 /* LoginController+ handlers.swift */; };
 		F877666152885FBE37892A4D /* Pods_GameOfChats.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 033E486EF119CA6F9FFC5F20 /* Pods_GameOfChats.framework */; };
 /* End PBXBuildFile section */
 
@@ -35,6 +36,7 @@
 		6BE2931120E0E94A001F2602 /* NewMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
 		6BE2931320E0F001001F2602 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		6BE2931620E105DE001F2602 /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
+		6BE2931820E10C86001F2602 /* LoginController+ handlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoginController+ handlers.swift"; sourceTree = "<group>"; };
 		E1441FDCA2C9A64AB5249C0F /* Pods-GameOfChats.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GameOfChats.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GameOfChats/Pods-GameOfChats.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -96,6 +98,7 @@
 			isa = PBXGroup;
 			children = (
 				6B45192620DD042300E38D44 /* LoginController.swift */,
+				6BE2931820E10C86001F2602 /* LoginController+ handlers.swift */,
 				6B45191520DD017800E38D44 /* MessagesController.swift */,
 				6BE2931120E0E94A001F2602 /* NewMessageController.swift */,
 				6BE2931620E105DE001F2602 /* UserCell.swift */,
@@ -240,6 +243,7 @@
 				6B45192B20DD0DBB00E38D44 /* LayoutConstraint.swift in Sources */,
 				6BE2931220E0E94A001F2602 /* NewMessageController.swift in Sources */,
 				6BE2931420E0F001001F2602 /* User.swift in Sources */,
+				6BE2931920E10C86001F2602 /* LoginController+ handlers.swift in Sources */,
 				6B45191620DD017800E38D44 /* MessagesController.swift in Sources */,
 				6B45192720DD042300E38D44 /* LoginController.swift in Sources */,
 				6B45191420DD017800E38D44 /* AppDelegate.swift in Sources */,

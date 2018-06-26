@@ -12,13 +12,14 @@ import FirebaseDatabase
 
 final class LoginController: UIViewController {
     
-    private lazy var profileImageView: UIImageView = {
+     lazy var profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 25
         imageView.layer.masksToBounds = true
         imageView.contentMode = .scaleAspectFill
         imageView.image = #imageLiteral(resourceName: "gameofthrones_splash")
-        //imageView.layer.borderWidth = 1
+        imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectProfileImage)))
+        imageView.isUserInteractionEnabled = true
         return imageView
     }()
     
@@ -43,7 +44,7 @@ final class LoginController: UIViewController {
         return button
     }()
     
-    private let nameTextField: UITextField = {
+     let nameTextField: UITextField = {
         let textFild = UITextField()
         textFild.placeholder = "  Name"
         return textFild
@@ -54,7 +55,7 @@ final class LoginController: UIViewController {
         return view
     }()
     
-    private let emailTextField: UITextField = {
+     let emailTextField: UITextField = {
         let textFild = UITextField()
         textFild.placeholder = "  Email address"
         return textFild
@@ -65,7 +66,7 @@ final class LoginController: UIViewController {
         return view
     }()
     
-    private let passwordTextField: UITextField = {
+     let passwordTextField: UITextField = {
         let textFild = UITextField()
         textFild.placeholder = "  Enter password"
         textFild.isSecureTextEntry = true
@@ -93,15 +94,39 @@ final class LoginController: UIViewController {
         view.backgroundColor = ConstantsValue.backgroundBlueColor
         
         setupViews()
- 
+        observeKeyboardNotifications()
+    }
+    
+    //Key Board Observe
+    fileprivate func observeKeyboardNotifications() { //Key Board Observer
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardShow), name: .UIKeyboardWillShow, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHide), name: .UIKeyboardWillHide, object: nil)
+    }
+    
+    @objc private func keyboardHide() {
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            
+            self.view.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
+            
+        }, completion: nil)
+    }
+    
+    @objc private func keyboardShow() {
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            
+            self.view.frame = CGRect(x: 0, y: -160, width: self.view.frame.width, height: self.view.frame.height)
+            
+        }, completion: nil)
     }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
+    
          if UIDevice.current.orientation.isLandscape {
-            profileImageView.isHidden = true
+            profileImageView.contentMode = .scaleAspectFit
          } else {
-            profileImageView.isHidden = false
+            profileImageView.contentMode = .scaleAspectFill
         }
     }
     
@@ -139,33 +164,6 @@ final class LoginController: UIViewController {
             if error != nil { print(error!); return }
             
             self?.dismiss(animated: true, completion: nil)
-        }
-    }
-    
-    @objc private func handleRegister() {
-        print("Register!")
-        
-        guard let email = emailTextField.text, let password = passwordTextField.text, let name = nameTextField.text else {
-            print("Form is not Value"); return }
-        
-        Auth.auth().createUser(withEmail: email, password: password) { [weak self] (user, error) in
-            if error != nil { print(error!); return }
-            
-            // successfully authenticated user
-            guard let userUnwrapped = Auth.auth().currentUser else { return }
-            let uid = userUnwrapped.uid
-            
-            let ref = Database.database().reference(fromURL: "https://gameofchats-18146.firebaseio.com/")
-            let usersReference = ref.child("users").child(uid)
-            let values = ["name": name, "email": email]
-            usersReference.updateChildValues(values, withCompletionBlock: { (error, ref) in
-                
-                if error != nil { print(error!); return }
-                
-                self?.dismiss(animated: true, completion: nil)
-                print("Saved user successfully into Firebase db")
-                
-            })  
         }
     }
     

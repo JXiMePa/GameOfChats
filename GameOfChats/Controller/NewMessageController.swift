@@ -29,9 +29,9 @@ class NewMessageController: UITableViewController {
             
             if let dictionary = snapshot.value as? [String: String] {
                 
-             guard let name = dictionary["name"], let email = dictionary["email"] else { return }
+             guard let name = dictionary["name"], let email = dictionary["email"], let profileImageUrl = dictionary["profileImageUrl"] else { return }
                 
-                let user = User(name: name, email: email)
+                let user = User(name: name, email: email, profileImageUrl: profileImageUrl)
                 self?.users.append(user)
                 
                 DispatchQueue.main.async {

@@ -12,10 +12,12 @@ class User: NSObject {
     
     var name: String?
     var email: String?
+    var profileImageUrl: String?
     
-    init(name: String, email: String) {
+    init(name: String, email: String, profileImageUrl: String) {
         self.name = name
         self.email = email
+        self.profileImageUrl = profileImageUrl
     }
    
 }
