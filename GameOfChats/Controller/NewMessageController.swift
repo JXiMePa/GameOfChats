@@ -25,11 +25,13 @@ class NewMessageController: UITableViewController {
     }
     
     private func fetchUser() {
+        
         Database.database().reference().child("users").observe(.childAdded, with: { [weak self] (snapshot) in
             
             if let dictionary = snapshot.value as? [String: String] {
                 
-             guard let name = dictionary["name"], let email = dictionary["email"], let profileImageUrl = dictionary["profileImageUrl"] else { return }
+                guard let name = dictionary["name"], let email = dictionary["email"], let profileImageUrl = dictionary["profileImageUrl"] else {
+                    print("name?, email?, ProfileImage?"); return }
                 
                 let user = User(name: name, email: email, profileImageUrl: profileImageUrl)
                 self?.users.append(user)
@@ -54,41 +56,23 @@ extension NewMessageController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-     // let cell = UITableViewCell(style: .subtitle, reuseIdentifier: newMessageCellId)
-        
+
         let cell = tableView.dequeueReusableCell(withIdentifier: newMessageCellId, for: indexPath) as! UserCell
         
         let user = users[indexPath.row]
+        
         cell.textLabel?.text = user.name
         cell.detailTextLabel?.text = user.email
         
         if let profileImageUrl = user.profileImageUrl {
             
             cell.profileImageView.loadImageWithUrl(profileImageUrl)
-            
-//            let url = URL(string: profileImageUrl)
-//            URLSession.shared.dataTask(with: url!) { (data, response, error) in
-//
-//                guard error == nil else { print("Error!.dataTask(with: url"); return }
-//                guard let data = data else { return }
-//
-//                DispatchQueue.main.async {
-//                    cell.profileImageView.image = UIImage(data: data)
-//                }
-//
-//            }.resume()
         }
         
         return cell
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 65.0
+        return ConstantsValue.messageRowsHight
     }
 }
-
-
-
-
-
-

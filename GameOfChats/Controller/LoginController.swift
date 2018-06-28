@@ -12,7 +12,9 @@ import FirebaseDatabase
 
 final class LoginController: UIViewController {
     
-     lazy var profileImageView: UIImageView = {
+   weak var messagesController: MessagesController?
+    
+    lazy var profileImageView: UIImageView = { //TODO: only for test not privat!
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 25
         imageView.layer.masksToBounds = true
@@ -44,7 +46,7 @@ final class LoginController: UIViewController {
         return button
     }()
     
-     let nameTextField: UITextField = {
+     let nameTextField: UITextField = { //TODO: only for test not privat!
         let textFild = UITextField()
         textFild.placeholder = "  Name"
         return textFild
@@ -55,7 +57,7 @@ final class LoginController: UIViewController {
         return view
     }()
     
-     let emailTextField: UITextField = {
+     let emailTextField: UITextField = { //TODO: only for test not privat!
         let textFild = UITextField()
         textFild.placeholder = "  Email address"
         return textFild
@@ -66,8 +68,9 @@ final class LoginController: UIViewController {
         return view
     }()
     
-     let passwordTextField: UITextField = {
+     lazy var passwordTextField: UITextField = { //TODO: only for test not privat!
         let textFild = UITextField()
+        textFild.delegate = self
         textFild.placeholder = "  Enter password"
         textFild.isSecureTextEntry = true
         return textFild
@@ -98,7 +101,7 @@ final class LoginController: UIViewController {
     }
     
     //Key Board Observe
-    fileprivate func observeKeyboardNotifications() { //Key Board Observer
+    private func observeKeyboardNotifications() { //Key Board Observer
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardShow), name: .UIKeyboardWillShow, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardHide), name: .UIKeyboardWillHide, object: nil)
@@ -134,7 +137,7 @@ final class LoginController: UIViewController {
         
         let title = loginRegisterSegmentControl.titleForSegment(at: loginRegisterSegmentControl.selectedSegmentIndex)
         
-        loginRegisterButton.setTitle(title, for: .normal)
+            loginRegisterButton.setTitle(title, for: .normal)
         // change hight inputContainerView
         
         inputsCounteinerViewHeight?.constant = loginRegisterSegmentControl.selectedSegmentIndex == 0 ? ConstantsValue.loginHeight * 2 : ConstantsValue.loginHeight * 3
@@ -157,18 +160,22 @@ final class LoginController: UIViewController {
     }
     
     private func handleLogin() {
+        
         guard let email = emailTextField.text, let password = passwordTextField.text else {
-            print("Form is not Value"); return }
+            print("Form is not Value")
+            return }
         
         Auth.auth().signIn(withEmail: email, password: password) { [weak self] (user, error) in
-            if error != nil { print(error!); return }
+            if error != nil { print(error!)
+                return }
             
+            self?.messagesController?.fetchUserAndSetupNavBarTitle()
             self?.dismiss(animated: true, completion: nil)
         }
     }
     
-    var inputsCounteinerViewHeight: NSLayoutConstraint?
-    var nameTextFieldHeightAnchor: NSLayoutConstraint?
+   private var inputsCounteinerViewHeight: NSLayoutConstraint?
+   private var nameTextFieldHeightAnchor: NSLayoutConstraint?
     
     private func setupViews() {
         
@@ -205,12 +212,19 @@ final class LoginController: UIViewController {
         
         view.addSubview(profileImageView)
         _ = profileImageView.anchor(view.topAnchor, left: view.leftAnchor, bottom: loginRegisterSegmentControl.topAnchor, right: view.rightAnchor, topConstant: 18, leftConstant: 50, bottomConstant: 8, rightConstant: 50)
-        
     }
     
 }
+extension LoginController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        handleLoginRegirter()
+        return true
+    }
+}
 
 struct ConstantsValue {
+    
     static let backgroundBlueColor = #colorLiteral(red: 0.2586793801, green: 0.3642121077, blue: 0.5262333439, alpha: 1)
     static let loginHeight: CGFloat = 50
+    static let messageRowsHight: CGFloat = 65
 }

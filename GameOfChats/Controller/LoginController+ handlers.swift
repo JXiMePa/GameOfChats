@@ -20,7 +20,6 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         picker.allowsEditing = true
         
         present(picker, animated: true, completion: nil)
-        
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
@@ -42,7 +41,6 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        print("imagePickerControllerDidCancel")
         dismiss(animated: true, completion: nil)
     }
     
@@ -50,23 +48,22 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         print("Start Register!")
         
         guard let email = emailTextField.text, let password = passwordTextField.text, let name = nameTextField.text else { print("Form is not valid")
-            return
-        }
+            return }
         
         Auth.auth().createUser(withEmail: email, password: password) { [weak self] (user, error) in
             
             if error != nil { print("error!")
-                return
-            }
+                return }
             
             // successfully authenticated user
             let imageName = NSUUID().uuidString //unique name
-            let storageRef = Storage.storage().reference().child("profile_images").child("\(imageName).png")
+            let storageRef = Storage.storage().reference().child("profile_images").child("\(imageName).jpg") //.png
             
             guard let userUnwrapped = Auth.auth().currentUser else { print("NO User!"); return }
             guard let profileImage = self?.profileImageView.image else { print("NO Image!"); return }
             
-            if let uploadData = UIImagePNGRepresentation(profileImage) {
+            if let uploadData = UIImageJPEGRepresentation(profileImage, 0.1) {
+                //UIImagePNGRepresentation
                 
                 storageRef.putData(uploadData, metadata: nil, completion: { [weak self] (metadata, error) in
                     
@@ -74,15 +71,15 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                     
                     
                     // Fetch the download URL
-                    storageRef.downloadURL { [weak self] url, error in
-                        print("storageRef.downloadURL")
+                    storageRef.downloadURL { [weak self] (url, error) in
+
                         if error != nil { print("Errrorr!")
                         } else {
-                            print(url?.absoluteString ?? "nil")
-                            let values = ["name": name, "email": email, "profileImageUrl": url?.absoluteString]
+
+                            let values = ["name": name, "email": email, "profileImageUrl": (url?.absoluteString) ?? ""]
                             
-//                                          register after Database upload!
-                            self?.regirterUserIntoDatabase(withUid: userUnwrapped.uid, values: values as [String : AnyObject])
+                     //register after Database upload!
+                            self?.regirterUserIntoDatabase(withUid: userUnwrapped.uid, values: values )
                         }
                     }
                 })
@@ -90,7 +87,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         }
     }
     
-    private func regirterUserIntoDatabase(withUid uid: String, values: [String: AnyObject]) {
+    private func regirterUserIntoDatabase(withUid uid: String, values: [String: String]) {
         
         let ref = Database.database().reference(fromURL: "https://gameofchats-18146.firebaseio.com/")
         let usersReference = ref.child("users").child(uid)
@@ -99,16 +96,15 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             
             if error != nil { print(error!); return }
             
-            self.dismiss(animated: true, completion: nil)
-            print("Saved user successfully into Firebase db")
+            guard let name = values["name"], let email = values["email"], let profileImageUrl = values["profileImageUrl"] else {
+                print("name?, email?, ProfileImage?"); return }
             
+            let user = User(name: name, email: email, profileImageUrl: profileImageUrl)
+            
+            self.messagesController?.setupNavBarWithUser(user: user)
+            
+            self.dismiss(animated: true, completion: nil)
+            print("Saved user successfully into Firebase!")
         })
     }
 }
-
-
-
-
-
-
-

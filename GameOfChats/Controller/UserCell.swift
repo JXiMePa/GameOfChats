@@ -10,7 +10,7 @@ import UIKit
 
 class UserCell: UITableViewCell {
     
-    lazy var profileImageView: CustomImageView = {
+    lazy var profileImageView: CustomImageView = { //TODO: only for test not privat!
        let iv = CustomImageView()
         iv.image = UIImage(named: "gameofthrones_splash")
         iv.contentMode = .scaleAspectFill

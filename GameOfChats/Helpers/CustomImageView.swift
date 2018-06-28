@@ -14,16 +14,16 @@ var imageCache = NSCache<AnyObject, UIImage>()
 final class CustomImageView: UIImageView {
     // too many Memory in use, only for test!
     
-    var imageURL: URL?
+   private var imageURL: URL?
     
-    let activityIndicator = UIActivityIndicatorView()
+   private let activityIndicator = UIActivityIndicatorView()
     
     func loadImageWithUrl(_ urlString: String) {
         
         guard let url = URL(string: urlString) else { return }
         
         // setup activityIndicator...
-        activityIndicator.color = .red
+        activityIndicator.color = .blue
         
         addSubview(activityIndicator)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6B354DB720E288D0001892D7 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B354DB620E288D0001892D7 /* Extensions.swift */; };
+		6B354DB720E288D0001892D7 /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B354DB620E288D0001892D7 /* CustomImageView.swift */; };
 		6B45191420DD017800E38D44 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B45191320DD017800E38D44 /* AppDelegate.swift */; };
 		6B45191620DD017800E38D44 /* MessagesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B45191520DD017800E38D44 /* MessagesController.swift */; };
 		6B45191B20DD017A00E38D44 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B45191A20DD017A00E38D44 /* Assets.xcassets */; };
@@ -15,6 +15,7 @@
 		6B45192720DD042300E38D44 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B45192620DD042300E38D44 /* LoginController.swift */; };
 		6B45192B20DD0DBB00E38D44 /* LayoutConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B45192A20DD0DBB00E38D44 /* LayoutConstraint.swift */; };
 		6B45192D20DD409200E38D44 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6B45192C20DD409200E38D44 /* GoogleService-Info.plist */; };
+		6BC862C220E4BDD800A24FDD /* ChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC862C120E4BDD800A24FDD /* ChatLogController.swift */; };
 		6BE2931220E0E94A001F2602 /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE2931120E0E94A001F2602 /* NewMessageController.swift */; };
 		6BE2931420E0F001001F2602 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE2931320E0F001001F2602 /* User.swift */; };
 		6BE2931720E105DE001F2602 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE2931620E105DE001F2602 /* UserCell.swift */; };
@@ -25,7 +26,7 @@
 /* Begin PBXFileReference section */
 		033E486EF119CA6F9FFC5F20 /* Pods_GameOfChats.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GameOfChats.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3761CE9F7CA54CC994E2BE26 /* Pods-GameOfChats.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GameOfChats.release.xcconfig"; path = "Pods/Target Support Files/Pods-GameOfChats/Pods-GameOfChats.release.xcconfig"; sourceTree = "<group>"; };
-		6B354DB620E288D0001892D7 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		6B354DB620E288D0001892D7 /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
 		6B45191020DD017800E38D44 /* GameOfChats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameOfChats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B45191320DD017800E38D44 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6B45191520DD017800E38D44 /* MessagesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesController.swift; sourceTree = "<group>"; };
@@ -35,6 +36,7 @@
 		6B45192620DD042300E38D44 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		6B45192A20DD0DBB00E38D44 /* LayoutConstraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayoutConstraint.swift; sourceTree = "<group>"; };
 		6B45192C20DD409200E38D44 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		6BC862C120E4BDD800A24FDD /* ChatLogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogController.swift; sourceTree = "<group>"; };
 		6BE2931120E0E94A001F2602 /* NewMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
 		6BE2931320E0F001001F2602 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		6BE2931620E105DE001F2602 /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
@@ -66,7 +68,7 @@
 		6B354DB520E288AB001892D7 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				6B354DB620E288D0001892D7 /* Extensions.swift */,
+				6B354DB620E288D0001892D7 /* CustomImageView.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -113,6 +115,7 @@
 				6B45191520DD017800E38D44 /* MessagesController.swift */,
 				6BE2931120E0E94A001F2602 /* NewMessageController.swift */,
 				6BE2931620E105DE001F2602 /* UserCell.swift */,
+				6BC862C120E4BDD800A24FDD /* ChatLogController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -251,8 +254,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6BC862C220E4BDD800A24FDD /* ChatLogController.swift in Sources */,
 				6B45192B20DD0DBB00E38D44 /* LayoutConstraint.swift in Sources */,
-				6B354DB720E288D0001892D7 /* Extensions.swift in Sources */,
+				6B354DB720E288D0001892D7 /* CustomImageView.swift in Sources */,
 				6BE2931220E0E94A001F2602 /* NewMessageController.swift in Sources */,
 				6BE2931420E0F001001F2602 /* User.swift in Sources */,
 				6BE2931920E10C86001F2602 /* LoginController+ handlers.swift in Sources */,
