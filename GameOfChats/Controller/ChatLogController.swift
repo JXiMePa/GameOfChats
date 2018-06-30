@@ -12,6 +12,10 @@ import FirebaseDatabase
 
 class ChatLogController: UICollectionViewController {
     
+    var user: User?{
+        didSet{ navigationItem.title = user?.name }
+    }
+    
     private let containerView: UIView = {
         let view = UIView()
         view.backgroundColor = #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1)
@@ -45,8 +49,6 @@ class ChatLogController: UICollectionViewController {
 
         collectionView?.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         
-        navigationItem.title = "Chat Log Controller"
-        
         view.addSubview(containerView)
         _ = containerView.anchor(left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, heightConstant: 50)
         
@@ -61,13 +63,33 @@ class ChatLogController: UICollectionViewController {
     }
     
     @objc private func handleSendButton() {
+        
         let ref = Database.database().reference().child("messages")
         guard let text = inputTextField.text else { return }
         
         // best thing to include the name inside of the messages.
         let childRef = ref.childByAutoId() //unique key
         
-        childRef.updateChildValues(["text": text])
+        guard let toId = user?.id else { print("toId???"); return }
+        guard let fromId = Auth.auth().currentUser?.uid else { print("fromId?"); return }
+        
+        let timestamp = NSDate.timeIntervalSinceReferenceDate
+        let values = ["text": text, "toId": toId, "fromId": fromId, "timestamp": timestamp] as [String : Any]
+       // childRef.updateChildValues(values)
+        childRef.updateChildValues(values) { (error, databaseReferense) in
+            guard error == nil else { print(error!); return }
+            
+            let userMessagesRef = Database.database().reference().child("user_messages").child(fromId)
+            let messageId = childRef.key //-LGEwuVgTv8aFEh4OuMp
+            
+            userMessagesRef.updateChildValues([messageId : 1])
+            
+            //recipient - oderjuva4
+            let recipientUserMessagesRef = Database.database().reference().child("user_messages").child(toId)
+            
+            recipientUserMessagesRef.updateChildValues([messageId : 1])
+        }
+        
         inputTextField.text = ""
     }
     

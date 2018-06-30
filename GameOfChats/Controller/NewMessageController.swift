@@ -13,6 +13,7 @@ class NewMessageController: UITableViewController {
     
     private let newMessageCellId = "newMessageCellId"
     private var users = [User]()
+    weak var messagesController: MessagesController? //2
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,12 +29,17 @@ class NewMessageController: UITableViewController {
         
         Database.database().reference().child("users").observe(.childAdded, with: { [weak self] (snapshot) in
             
-            if let dictionary = snapshot.value as? [String: String] {
+            if let dictionary = snapshot.value as? [String: Any] {
                 
-                guard let name = dictionary["name"], let email = dictionary["email"], let profileImageUrl = dictionary["profileImageUrl"] else {
-                    print("name?, email?, ProfileImage?"); return }
+                //guard let name = dictionary["name"], let email = dictionary["email"], let profileImageUrl = dictionary["profileImageUrl"] else {
+                   // print("name?, email?, ProfileImage?"); return }
                 
-                let user = User(name: name, email: email, profileImageUrl: profileImageUrl)
+                //let user = User(name: name, email: email, profileImageUrl: profileImageUrl, id: snapshot.key)
+                
+                let user = User()
+                user.setValuesForKeys(dictionary)
+                user.id = snapshot.key
+                
                 self?.users.append(user)
                 
                 DispatchQueue.main.async {
@@ -75,4 +81,17 @@ extension NewMessageController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return ConstantsValue.messageRowsHight
     }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        dismiss(animated: true) {
+            let user = self.users[indexPath.row]
+            
+            self.messagesController?.showChatLogControllerForUser(user) //1
+        }
+    }
 }
+
+
+
+
+

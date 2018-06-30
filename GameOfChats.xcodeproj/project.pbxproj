@@ -15,6 +15,7 @@
 		6B45192720DD042300E38D44 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B45192620DD042300E38D44 /* LoginController.swift */; };
 		6B45192B20DD0DBB00E38D44 /* LayoutConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B45192A20DD0DBB00E38D44 /* LayoutConstraint.swift */; };
 		6B45192D20DD409200E38D44 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6B45192C20DD409200E38D44 /* GoogleService-Info.plist */; };
+		6B79D1CB20E51DAD00CBE506 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B79D1CA20E51DAD00CBE506 /* Message.swift */; };
 		6BC862C220E4BDD800A24FDD /* ChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC862C120E4BDD800A24FDD /* ChatLogController.swift */; };
 		6BE2931220E0E94A001F2602 /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE2931120E0E94A001F2602 /* NewMessageController.swift */; };
 		6BE2931420E0F001001F2602 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE2931320E0F001001F2602 /* User.swift */; };
@@ -36,6 +37,7 @@
 		6B45192620DD042300E38D44 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		6B45192A20DD0DBB00E38D44 /* LayoutConstraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayoutConstraint.swift; sourceTree = "<group>"; };
 		6B45192C20DD409200E38D44 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		6B79D1CA20E51DAD00CBE506 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		6BC862C120E4BDD800A24FDD /* ChatLogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogController.swift; sourceTree = "<group>"; };
 		6BE2931120E0E94A001F2602 /* NewMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
 		6BE2931320E0F001001F2602 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -94,12 +96,13 @@
 		6B45191220DD017800E38D44 /* GameOfChats */ = {
 			isa = PBXGroup;
 			children = (
-				6B354DB520E288AB001892D7 /* Helpers */,
 				6BE2931520E0F03C001F2602 /* Model */,
+				6B70D40B20E653870056BB3D /* View */,
 				6B45192520DD03B900E38D44 /* Controller */,
 				6B45191320DD017800E38D44 /* AppDelegate.swift */,
 				6B45192A20DD0DBB00E38D44 /* LayoutConstraint.swift */,
 				6B45191A20DD017A00E38D44 /* Assets.xcassets */,
+				6B354DB520E288AB001892D7 /* Helpers */,
 				6B45191C20DD017A00E38D44 /* LaunchScreen.storyboard */,
 				6B45191F20DD017A00E38D44 /* Info.plist */,
 				6B45192C20DD409200E38D44 /* GoogleService-Info.plist */,
@@ -114,16 +117,24 @@
 				6BE2931820E10C86001F2602 /* LoginController+ handlers.swift */,
 				6B45191520DD017800E38D44 /* MessagesController.swift */,
 				6BE2931120E0E94A001F2602 /* NewMessageController.swift */,
-				6BE2931620E105DE001F2602 /* UserCell.swift */,
 				6BC862C120E4BDD800A24FDD /* ChatLogController.swift */,
 			);
 			path = Controller;
+			sourceTree = "<group>";
+		};
+		6B70D40B20E653870056BB3D /* View */ = {
+			isa = PBXGroup;
+			children = (
+				6BE2931620E105DE001F2602 /* UserCell.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		6BE2931520E0F03C001F2602 /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				6BE2931320E0F001001F2602 /* User.swift */,
+				6B79D1CA20E51DAD00CBE506 /* Message.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -260,6 +271,7 @@
 				6BE2931220E0E94A001F2602 /* NewMessageController.swift in Sources */,
 				6BE2931420E0F001001F2602 /* User.swift in Sources */,
 				6BE2931920E10C86001F2602 /* LoginController+ handlers.swift in Sources */,
+				6B79D1CB20E51DAD00CBE506 /* Message.swift in Sources */,
 				6B45191620DD017800E38D44 /* MessagesController.swift in Sources */,
 				6B45192720DD042300E38D44 /* LoginController.swift in Sources */,
 				6B45191420DD017800E38D44 /* AppDelegate.swift in Sources */,

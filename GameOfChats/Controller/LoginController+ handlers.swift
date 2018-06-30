@@ -87,19 +87,24 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         }
     }
     
-    private func regirterUserIntoDatabase(withUid uid: String, values: [String: String]) {
+    private func regirterUserIntoDatabase(withUid uid: String, values: [String: Any]) {
         
-        let ref = Database.database().reference(fromURL: "https://gameofchats-18146.firebaseio.com/")
+        let ref = Database.database().reference()
+            //.reference(fromURL: "https://gameofchats-18146.firebaseio.com/")
         let usersReference = ref.child("users").child(uid)
         
         usersReference.updateChildValues(values, withCompletionBlock: { (error, ref) in
             
             if error != nil { print(error!); return }
             
-            guard let name = values["name"], let email = values["email"], let profileImageUrl = values["profileImageUrl"] else {
-                print("name?, email?, ProfileImage?"); return }
+//            guard let name = values["name"], let email = values["email"], let profileImageUrl = values["profileImageUrl"] else {
+//                print("name?, email?, ProfileImage?"); return }
             
-            let user = User(name: name, email: email, profileImageUrl: profileImageUrl)
+            //let user = User(name: name, email: email, profileImageUrl: profileImageUrl, id: nil)
+            
+            let user = User()
+            
+            user.setValuesForKeys(values)
             
             self.messagesController?.setupNavBarWithUser(user: user)
             

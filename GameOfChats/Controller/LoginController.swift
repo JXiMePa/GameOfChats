@@ -125,7 +125,8 @@ final class LoginController: UIViewController {
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-    
+        
+        //TODO: maybe i will find better place later
          if UIDevice.current.orientation.isLandscape {
             profileImageView.contentMode = .scaleAspectFit
          } else {
@@ -138,7 +139,7 @@ final class LoginController: UIViewController {
         let title = loginRegisterSegmentControl.titleForSegment(at: loginRegisterSegmentControl.selectedSegmentIndex)
         
             loginRegisterButton.setTitle(title, for: .normal)
-        // change hight inputContainerView
+        //change hight inputContainerView
         
         inputsCounteinerViewHeight?.constant = loginRegisterSegmentControl.selectedSegmentIndex == 0 ? ConstantsValue.loginHeight * 2 : ConstantsValue.loginHeight * 3
         

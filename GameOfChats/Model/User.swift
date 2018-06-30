@@ -8,16 +8,18 @@
 
 import UIKit
 
-final class User: NSObject {
+class User: NSObject {
     
-    var name: String?
-    var email: String?
-    var profileImageUrl: String?
+   @objc var id: String?
+   @objc var name: String?
+   @objc var email: String?
+   @objc var profileImageUrl: String?
     
-    init(name: String, email: String, profileImageUrl: String) {
-        self.name = name
-        self.email = email
-        self.profileImageUrl = profileImageUrl
-    }
+//    init(name: String, email: String, profileImageUrl: String, id: String?) {
+//        self.name = name
+//        self.email = email
+//        self.profileImageUrl = profileImageUrl
+//        self.id = id
+//    }
    
 }
