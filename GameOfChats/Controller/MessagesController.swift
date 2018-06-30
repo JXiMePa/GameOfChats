@@ -48,6 +48,8 @@ final class MessagesController: UITableViewController {
                 
                 if let dictionary = snapshot.value as? [String: AnyObject] {
                     let message = Message()
+                    
+                    //potential Craching!!! if keys don't match
                     message.setValuesForKeys(dictionary)
                     
                     if let id = message.toId {
@@ -79,6 +81,8 @@ final class MessagesController: UITableViewController {
             
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 let message = Message()
+                
+                //potential Craching!!! if keys don't match
                 message.setValuesForKeys(dictionary)
                 
                 if let id = message.toId {
@@ -116,15 +120,10 @@ final class MessagesController: UITableViewController {
         
         Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value) { [weak self] (snapshot) in
             
-            if let dictionary = snapshot.value as? [String: String] {
-                
-//                guard let name = dictionary["name"],
-//                    let email = dictionary["email"],
-//                    let profileImageUrl = dictionary["profileImageUrl"] else { return }
-//
-//                let user = User(name: name , email: email, profileImageUrl: profileImageUrl, id: nil)
-                
+            if let dictionary = snapshot.value as? [String : Any] {
+
                 let user = User()
+                //potential Craching!!! if keys don't match
                 user.setValuesForKeys(dictionary)
                 self?.setupNavBarWithUser(user: user)
             }
@@ -171,6 +170,7 @@ final class MessagesController: UITableViewController {
         let layaut = UICollectionViewFlowLayout()
         let chatLogController = ChatLogController(collectionViewLayout: layaut)
         chatLogController.user = user
+        
         navigationController?.pushViewController(chatLogController, animated: true)
     }
     
@@ -212,7 +212,10 @@ extension MessagesController {
             guard let dictionary = snapshot.value as? [String: Any] else { return }
             
             let user = User()
+            user.id = chatPartnerId
+            //potential Craching!!! if keys don't match
             user.setValuesForKeys(dictionary)
+            
             self?.showChatLogControllerForUser(user)
             
         }, withCancel: nil)

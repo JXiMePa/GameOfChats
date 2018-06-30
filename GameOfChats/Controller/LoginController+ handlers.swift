@@ -96,14 +96,10 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         usersReference.updateChildValues(values, withCompletionBlock: { (error, ref) in
             
             if error != nil { print(error!); return }
-            
-//            guard let name = values["name"], let email = values["email"], let profileImageUrl = values["profileImageUrl"] else {
-//                print("name?, email?, ProfileImage?"); return }
-            
-            //let user = User(name: name, email: email, profileImageUrl: profileImageUrl, id: nil)
-            
+
             let user = User()
             
+            //potential Craching!!! if keys don't match
             user.setValuesForKeys(values)
             
             self.messagesController?.setupNavBarWithUser(user: user)

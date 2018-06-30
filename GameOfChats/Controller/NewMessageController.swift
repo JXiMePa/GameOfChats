@@ -31,12 +31,8 @@ class NewMessageController: UITableViewController {
             
             if let dictionary = snapshot.value as? [String: Any] {
                 
-                //guard let name = dictionary["name"], let email = dictionary["email"], let profileImageUrl = dictionary["profileImageUrl"] else {
-                   // print("name?, email?, ProfileImage?"); return }
-                
-                //let user = User(name: name, email: email, profileImageUrl: profileImageUrl, id: snapshot.key)
-                
                 let user = User()
+                //potential Craching!!! if keys don't match
                 user.setValuesForKeys(dictionary)
                 user.id = snapshot.key
                 
