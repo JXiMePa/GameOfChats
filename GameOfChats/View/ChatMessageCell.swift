@@ -10,11 +10,14 @@ import UIKit
 
 class ChatMessageCell: UICollectionViewCell {
     
+    var messageViewWidth: NSLayoutConstraint?
+
      let textView: UITextView = { //TODO: only for test not privat!
         let textView = UITextView()
         textView.backgroundColor = #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)
-        textView.text = "Sample text for now"
         textView.font = UIFont.systemFont(ofSize: 16)
+        textView.layer.cornerRadius = 15
+        textView.textAlignment = .center
         return textView
     }()
     
@@ -22,8 +25,9 @@ class ChatMessageCell: UICollectionViewCell {
         super.init(frame: frame)
 
         addSubview(textView)
-       _ = textView.anchor(self.topAnchor, bottom: self.bottomAnchor, right: self.rightAnchor, widthConstant: 200)
-        
+       _ = textView.anchor(self.topAnchor, bottom: self.bottomAnchor, right: self.rightAnchor, rightConstant: 12)
+        messageViewWidth = textView.widthAnchor.constraint(equalToConstant: 200)
+        messageViewWidth?.isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {

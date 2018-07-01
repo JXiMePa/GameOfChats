@@ -53,6 +53,8 @@ class ChatLogController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        collectionView?.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 58, right: 0)
+        collectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
         collectionView?.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         collectionView?.alwaysBounceVertical = true
         collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: chatLogCellId)
@@ -68,6 +70,12 @@ class ChatLogController: UICollectionViewController {
         
         view.addSubview(separatorView)
         _ = separatorView.anchor(left: view.leftAnchor, bottom: containerView.topAnchor, right: view.rightAnchor, heightConstant: 1)
+    }
+    
+    fileprivate func estimateFrameForText(_ text: String) -> CGRect {
+        let size = CGSize(width: 200, height: 1000)
+        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+        return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16)], context: nil)
     }
     
     private func observeMessages()  {
@@ -117,11 +125,13 @@ class ChatLogController: UICollectionViewController {
         let timestamp = NSDate.timeIntervalSinceReferenceDate
         let values = ["text": text, "toId": toId, "fromId": fromId, "timestamp": timestamp] as [String : Any]
        // childRef.updateChildValues(values)
-        childRef.updateChildValues(values) { (error, databaseReferense) in
+        childRef.updateChildValues(values) { [weak self] (error, databaseReferense) in
             guard error == nil else { print(error!); return }
             
             let userMessagesRef = Database.database().reference().child("user_messages").child(fromId)
             let messageId = childRef.key //-LGEwuVgTv8aFEh4OuMp
+            
+            self?.inputTextField.text = nil
             
             userMessagesRef.updateChildValues([messageId : 1])
             
@@ -130,10 +140,7 @@ class ChatLogController: UICollectionViewController {
             
             recipientUserMessagesRef.updateChildValues([messageId : 1])
         }
-        
-        inputTextField.text = ""
     }
-    
 }
 
 extension ChatLogController: UICollectionViewDelegateFlowLayout {
@@ -149,11 +156,21 @@ extension ChatLogController: UICollectionViewDelegateFlowLayout {
         let message = messages[indexPath.item]
         cell.textView.text = message.text
         
+        if let text = message.text {
+        cell.messageViewWidth?.constant = estimateFrameForText(text).width + 32
+        }
+        
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width, height: 80)
+        var hight: CGFloat = 80
+        
+        if let text = messages[indexPath.item].text {
+            hight = estimateFrameForText(text).height + 20
+        }
+        
+        return CGSize(width: view.frame.width, height: hight)
     }
 }
 

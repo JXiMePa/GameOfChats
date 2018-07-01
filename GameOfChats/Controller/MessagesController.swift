@@ -52,8 +52,8 @@ final class MessagesController: UITableViewController {
                     //potential Craching!!! if keys don't match
                     message.setValuesForKeys(dictionary)
                     
-                    if let id = message.toId {
-                        self?.groupMessage[id] = message
+                    if let chatPartnerId = message.chatPartnerId() {
+                        self?.groupMessage[chatPartnerId] = message
                         
                         guard let value = self?.groupMessage.values else { return }
                         self?.messages = Array(value)
