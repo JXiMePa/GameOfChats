@@ -15,6 +15,7 @@ class NewMessageController: UITableViewController {
     private var users = [User]()
     weak var messagesController: MessagesController? //2
     
+    //MARK: Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         

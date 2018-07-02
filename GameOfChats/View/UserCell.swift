@@ -60,7 +60,6 @@ class UserCell: UITableViewCell {
                         self?.profileImageView.loadImageWithUrl(profileImageUrl)
                     }
                 }
-                
             }, withCancel: nil)
         }
     }

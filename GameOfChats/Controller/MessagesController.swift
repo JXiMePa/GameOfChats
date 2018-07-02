@@ -16,6 +16,7 @@ final class MessagesController: UITableViewController {
     private var messages = [Message]()
     private var groupMessage = [String: Message]()
     private let userCellId = "userCellId"
+    private var timer: Timer?
     
     //MARK: Life Cycle
     override func viewDidLoad() {
@@ -31,8 +32,6 @@ final class MessagesController: UITableViewController {
         navigationItem.rightBarButtonItems = [usersButton]
         
         checkUserIsLoggedIn()
-        //observeMessages()
-
     }
     
     private func observeUserMessages() {
@@ -41,67 +40,52 @@ final class MessagesController: UITableViewController {
         
         let ref = Database.database().reference().child("user_messages").child(uid)
         ref.observe(.childAdded, with: { [weak self] (snapshot) in
-            let messageId = snapshot.key
-            
-            let messageReference = Database.database().reference().child("messages").child(messageId)
-            messageReference.observeSingleEvent(of: .value, with: { (snapshot) in
+            let userId = snapshot.key
+            Database.database().reference().child("user_messages").child(uid).child(userId).observe(.childAdded, with: { [weak self] (snapshot) in
                 
-                if let dictionary = snapshot.value as? [String: AnyObject] {
-                    let message = Message()
+                let messageReference = Database.database().reference().child("messages").child(snapshot.key)
+                messageReference.observeSingleEvent(of: .value, with: { (snapshot) in
                     
-                    //potential Craching!!! if keys don't match
-                    message.setValuesForKeys(dictionary)
-                    
-                    if let chatPartnerId = message.chatPartnerId() {
-                        self?.groupMessage[chatPartnerId] = message
+                    if let dictionary = snapshot.value as? [String: AnyObject] {
+                        let message = Message()
                         
-                        guard let value = self?.groupMessage.values else { return }
-                        self?.messages = Array(value)
+                        //potential Craching!!! if keys don't match
+                        message.setValuesForKeys(dictionary)
                         
-                        //Potentially crash - "!", but message must have timestamp.
-                        self?.messages.sort { $0.timestamp!.int32Value > $1.timestamp!.int32Value
+                        if let chatPartnerId = message.chatPartnerId() {
+                            self?.groupMessage[chatPartnerId] = message
+                            
+                            guard let value = self?.groupMessage.values else { return }
+                            self?.messages = Array(value)
+                            
+                            //Potentially crash - "!", but message must have timestamp.
+                            self?.messages.sort { $0.timestamp!.int32Value > $1.timestamp!.int32Value
+                            }
                         }
+                        self?.attemptReloadOfTable()
+                        ///------------------
+                        //MARK: FIX!..  it will wait 0.1 sec if not cancel reload Table
+                        self?.timer?.invalidate()
+                        self?.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self!, selector: #selector(self?.handleReloadTable), userInfo: nil, repeats: false)
+                        ///------------------
                     }
                     
-                    DispatchQueue.main.async {
-                        self?.tableView.reloadData()
-                    }
-                }
+            }, withCancel: nil)
                 
             }, withCancel: nil)
             
-            
-        }, withCancel: nil)
+            }, withCancel: nil)
     }
     
-    private func observeMessages() {
+    private func attemptReloadOfTable() {
         
-        let ref = Database.database().reference().child("messages")
-        ref.observe(.childAdded, with: { [weak self] (snapshot) in
-            
-            if let dictionary = snapshot.value as? [String: AnyObject] {
-                let message = Message()
-                
-                //potential Craching!!! if keys don't match
-                message.setValuesForKeys(dictionary)
-                
-                if let id = message.toId {
-                    self?.groupMessage[id] = message
-                    
-                    guard let value = self?.groupMessage.values else { return }
-                    self?.messages = Array(value)
-                    
-                    //Potentially crash - "!", but message must have timestamp.
-                    self?.messages.sort { $0.timestamp!.int32Value > $1.timestamp!.int32Value
-                    }
-                }
-                
-                DispatchQueue.main.async {
-                    self?.tableView.reloadData()
-                }
-            }
-            
-        }, withCancel: nil)
+    }
+    
+    @objc private func handleReloadTable() {
+        DispatchQueue.main.async {
+            //            print("Test Reload Table")
+            self.tableView.reloadData()
+        }
     }
     
     private func checkUserIsLoggedIn() {
@@ -121,9 +105,9 @@ final class MessagesController: UITableViewController {
         Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value) { [weak self] (snapshot) in
             
             if let dictionary = snapshot.value as? [String : Any] {
-
+                
                 let user = User()
-                //potential Craching!!! if keys don't match
+                //if keys don't match potential Craching!!!
                 user.setValuesForKeys(dictionary)
                 self?.setupNavBarWithUser(user: user)
             }
@@ -213,12 +197,12 @@ extension MessagesController {
             
             let user = User()
             user.id = chatPartnerId
-            //potential Craching!!! if keys don't match
+            //if keys don't match potential Craching!!!
             user.setValuesForKeys(dictionary)
             
             self?.showChatLogControllerForUser(user)
             
-        }, withCancel: nil)
+            }, withCancel: nil)
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -238,10 +222,3 @@ extension MessagesController {
         return cell
     }
 }
-
-//print(snapshot)
-//Snap (7wviQLvOgwg3WbzGOBsoukMrHct2) {
-//    email = "Drakoniha@gmail.com";
-//    name = Drakoniha;
-//    profileImageUrl = "https://firebasestorage.googleapis.com/v0/b/gameofchats-18146.appspot.com/o/profile_images%2F07AB8C12-1FC4-447B-A722-DF8E4DA46201.png?alt=media&token=9bc7df01-9ad7-46f5-ab5b-edfb0275e93a";
-//}

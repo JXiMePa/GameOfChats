@@ -101,6 +101,11 @@ final class LoginController: UIViewController {
     }
     
     //Key Board Observe
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     private func observeKeyboardNotifications() { //Key Board Observer
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardShow), name: .UIKeyboardWillShow, object: nil)
         
@@ -225,6 +230,7 @@ extension LoginController: UITextFieldDelegate {
 
 struct ConstantsValue {
     
+    static let font = UIFont.systemFont(ofSize: 16)
     static let backgroundBlueColor = #colorLiteral(red: 0.2586793801, green: 0.3642121077, blue: 0.5262333439, alpha: 1)
     static let loginHeight: CGFloat = 50
     static let messageRowsHight: CGFloat = 65
