@@ -16,6 +16,7 @@ class UserCell: UITableViewCell {
     
     var message: Message? {
         didSet {
+            
             setupNameAndProfileImage()
             
             detailTextLabel?.text = message?.text
@@ -29,8 +30,7 @@ class UserCell: UITableViewCell {
     }
     
     let timeLabel: UILabel = {
-       let label = UILabel()
-        label.text = "HH:MM:SS"
+        let label = UILabel()
         label.textAlignment = .right
         label.font = UIFont.systemFont(ofSize: 13)
         label.textColor = #colorLiteral(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
@@ -39,7 +39,6 @@ class UserCell: UITableViewCell {
     
     lazy var profileImageView: CustomImageView = { //TODO: only for test not privat!
         let iv = CustomImageView()
-        iv.image = UIImage(named: "gameofthrones_splash")
         iv.contentMode = .scaleAspectFill
         iv.layer.cornerRadius = self.frame.height / 2
         iv.layer.masksToBounds = true
@@ -47,7 +46,7 @@ class UserCell: UITableViewCell {
     }()
     
     private func setupNameAndProfileImage() {
-
+        
         if let id = message?.chatPartnerId() {
             let ref = Database.database().reference().child("users").child(id)
             
@@ -60,7 +59,7 @@ class UserCell: UITableViewCell {
                         self?.profileImageView.loadImageWithUrl(profileImageUrl)
                     }
                 }
-            }, withCancel: nil)
+                }, withCancel: nil)
         }
     }
     

@@ -12,7 +12,9 @@ import FirebaseDatabase
 
 final class LoginController: UIViewController {
     
-   weak var messagesController: MessagesController?
+    weak var messagesController: MessagesController?
+    private var inputsCounteinerViewHeight: NSLayoutConstraint?
+    private var nameTextFieldHeightAnchor: NSLayoutConstraint?
     
     lazy var profileImageView: UIImageView = { //TODO: only for test not privat!
         let imageView = UIImageView()
@@ -46,95 +48,73 @@ final class LoginController: UIViewController {
         return button
     }()
     
-     let nameTextField: UITextField = { //TODO: only for test not privat!
+    let nameTextField: UITextField = { //TODO: only for test not privat!
         let textFild = UITextField()
         textFild.placeholder = "  Name"
         return textFild
     }()
+    
     private let nameSeparatorView : UIView = {
         let view = UIView()
-        view.backgroundColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
+        view.backgroundColor = ConstantsValue.backgroundBlueColor
         return view
     }()
     
-     let emailTextField: UITextField = { //TODO: only for test not privat!
+    let emailTextField: UITextField = { //TODO: only for test not privat!
         let textFild = UITextField()
         textFild.placeholder = "  Email address"
         return textFild
     }()
+    
     private let emailSeparatorView : UIView = {
         let view = UIView()
-        view.backgroundColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
+        view.backgroundColor = ConstantsValue.backgroundBlueColor
         return view
     }()
     
-     lazy var passwordTextField: UITextField = { //TODO: only for test not privat!
+    lazy var passwordTextField: UITextField = { //TODO: only for test not privat!
         let textFild = UITextField()
         textFild.delegate = self
         textFild.placeholder = "  Enter password"
         textFild.isSecureTextEntry = true
         return textFild
     }()
+    
     private let passwordSeparatorView : UIView = {
         let view = UIView()
-        view.backgroundColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
+        view.backgroundColor = ConstantsValue.backgroundBlueColor
         return view
     }()
     
     private lazy var loginRegisterSegmentControl: UISegmentedControl = {
-       let sc = UISegmentedControl(items: ["Login", "Register"])
+        let sc = UISegmentedControl(items: ["Login", "Register"])
         sc.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         sc.selectedSegmentIndex = 1
         sc.addTarget(self, action: #selector(handleLoginRegisterChange), for: .valueChanged)
         return sc
     }()
-    
-    
+
     //MARK: Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = ConstantsValue.backgroundBlueColor
-        
+    
         setupViews()
-        observeKeyboardNotifications()
     }
     
-    //Key Board Observe
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self)
-    }
-    
-    private func observeKeyboardNotifications() { //Key Board Observer
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardShow), name: .UIKeyboardWillShow, object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHide), name: .UIKeyboardWillHide, object: nil)
-    }
-    
-    @objc private func keyboardHide() {
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-            
-            self.view.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
-            
-        }, completion: nil)
-    }
-    
-    @objc private func keyboardShow() {
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-            
-            self.view.frame = CGRect(x: 0, y: -160, width: self.view.frame.width, height: self.view.frame.height)
-            
-        }, completion: nil)
     }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         
         //TODO: maybe i will find better place later
-         if UIDevice.current.orientation.isLandscape {
+        if UIDevice.current.orientation.isLandscape {
             profileImageView.contentMode = .scaleAspectFit
-         } else {
+        } else {
             profileImageView.contentMode = .scaleAspectFill
         }
     }
@@ -143,7 +123,7 @@ final class LoginController: UIViewController {
         
         let title = loginRegisterSegmentControl.titleForSegment(at: loginRegisterSegmentControl.selectedSegmentIndex)
         
-            loginRegisterButton.setTitle(title, for: .normal)
+        loginRegisterButton.setTitle(title, for: .normal)
         //change hight inputContainerView
         
         inputsCounteinerViewHeight?.constant = loginRegisterSegmentControl.selectedSegmentIndex == 0 ? ConstantsValue.loginHeight * 2 : ConstantsValue.loginHeight * 3
@@ -158,10 +138,11 @@ final class LoginController: UIViewController {
     }
     
     @objc private func handleLoginRegirter() {
+        
         if loginRegisterSegmentControl.selectedSegmentIndex == 0 {
             handleLogin()
         } else {
-           handleRegister()
+            handleRegister()
         }
     }
     
@@ -172,6 +153,7 @@ final class LoginController: UIViewController {
             return }
         
         Auth.auth().signIn(withEmail: email, password: password) { [weak self] (user, error) in
+            
             if error != nil { print(error!)
                 return }
             
@@ -179,9 +161,6 @@ final class LoginController: UIViewController {
             self?.dismiss(animated: true, completion: nil)
         }
     }
-    
-   private var inputsCounteinerViewHeight: NSLayoutConstraint?
-   private var nameTextFieldHeightAnchor: NSLayoutConstraint?
     
     private func setupViews() {
         
@@ -195,8 +174,8 @@ final class LoginController: UIViewController {
         
         inputsContainerView.addSubview(nameTextField)
         _ = nameTextField.anchor(inputsContainerView.topAnchor, left: inputsContainerView.leftAnchor, bottom: nil, right: inputsContainerView.rightAnchor, leftConstant: 12)
-            nameTextFieldHeightAnchor = nameTextField.heightAnchor.constraint(equalToConstant: ConstantsValue.loginHeight)
-            nameTextFieldHeightAnchor?.isActive = true
+        nameTextFieldHeightAnchor = nameTextField.heightAnchor.constraint(equalToConstant: ConstantsValue.loginHeight)
+        nameTextFieldHeightAnchor?.isActive = true
         
         inputsContainerView.addSubview(nameSeparatorView)
         _ = nameSeparatorView.anchor(nameTextField.bottomAnchor, left: inputsContainerView.leftAnchor, bottom: nil, right: inputsContainerView.rightAnchor, heightConstant: 1)
@@ -221,7 +200,9 @@ final class LoginController: UIViewController {
     }
     
 }
+
 extension LoginController: UITextFieldDelegate {
+    // passwordTextField.delegate = self
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         handleLoginRegirter()
         return true
@@ -230,8 +211,8 @@ extension LoginController: UITextFieldDelegate {
 
 struct ConstantsValue {
     
-    static let font = UIFont.systemFont(ofSize: 16)
     static let backgroundBlueColor = #colorLiteral(red: 0.2586793801, green: 0.3642121077, blue: 0.5262333439, alpha: 1)
+    static let font = UIFont.systemFont(ofSize: 16)
     static let loginHeight: CGFloat = 50
     static let messageRowsHight: CGFloat = 65
 }

@@ -43,7 +43,6 @@ class NewMessageController: UITableViewController {
                     self?.tableView.reloadData()
                 }
             }
-            
         }, withCancel: nil)
     }
     
@@ -59,7 +58,7 @@ extension NewMessageController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: newMessageCellId, for: indexPath) as! UserCell
         
         let user = users[indexPath.row]
@@ -71,7 +70,6 @@ extension NewMessageController {
             
             cell.profileImageView.loadImageWithUrl(profileImageUrl)
         }
-        
         return cell
     }
     

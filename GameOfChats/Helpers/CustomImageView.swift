@@ -46,7 +46,7 @@ final class CustomImageView: UIImageView {
                 
                 if error != nil {
                     print(error as Any)
-                    // self?.activityIndicator.stopAnimating()
+                    self?.activityIndicator.stopAnimating()
                     return
                 }
                 

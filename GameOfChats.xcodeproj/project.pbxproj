@@ -72,6 +72,7 @@
 		6B354DB520E288AB001892D7 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				6B45192A20DD0DBB00E38D44 /* LayoutConstraint.swift */,
 				6B354DB620E288D0001892D7 /* CustomImageView.swift */,
 			);
 			path = Helpers;
@@ -102,7 +103,6 @@
 				6B70D40B20E653870056BB3D /* View */,
 				6B45192520DD03B900E38D44 /* Controller */,
 				6B45191320DD017800E38D44 /* AppDelegate.swift */,
-				6B45192A20DD0DBB00E38D44 /* LayoutConstraint.swift */,
 				6B45191A20DD017A00E38D44 /* Assets.xcassets */,
 				6B354DB520E288AB001892D7 /* Helpers */,
 				6B45191C20DD017A00E38D44 /* LaunchScreen.storyboard */,

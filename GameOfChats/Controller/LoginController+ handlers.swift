@@ -15,7 +15,6 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
     @objc func handleSelectProfileImage() {
         
         let picker = UIImagePickerController()
-        
         picker.delegate = self
         picker.allowsEditing = true
         
@@ -45,10 +44,13 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
     }
     
     @objc func handleRegister() {
-        print("Start Register!")
+        //Maybe i will create Indicator here..
         
-        guard let email = emailTextField.text, let password = passwordTextField.text, let name = nameTextField.text else { print("Form is not valid")
-            return }
+      guard let email = emailTextField.text,
+            let password = passwordTextField.text,
+            let name = nameTextField.text else {
+                print("Form is not valid")
+                return }
         
         Auth.auth().createUser(withEmail: email, password: password) { [weak self] (user, error) in
             
@@ -68,17 +70,16 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                 storageRef.putData(uploadData, metadata: nil, completion: { [weak self] (metadata, error) in
                     
                     if error != nil { print("error!", error!); return }
-                    
-                    
+
                     // Fetch the download URL
                     storageRef.downloadURL { [weak self] (url, error) in
-
-                        if error != nil { print("Errrorr!")
+                        
+                        if error != nil { print(error!)
                         } else {
-
+                            
                             let values = ["name": name, "email": email, "profileImageUrl": (url?.absoluteString) ?? ""]
                             
-                     //register after Database upload!
+                            //register after Database upload!
                             self?.regirterUserIntoDatabase(withUid: userUnwrapped.uid, values: values )
                         }
                     }
@@ -90,22 +91,20 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
     private func regirterUserIntoDatabase(withUid uid: String, values: [String: Any]) {
         
         let ref = Database.database().reference()
-            //.reference(fromURL: "https://gameofchats-18146.firebaseio.com/")
+        //.reference(fromURL: "https://gameofchats-18146.firebaseio.com/")
         let usersReference = ref.child("users").child(uid)
         
         usersReference.updateChildValues(values, withCompletionBlock: { (error, ref) in
             
             if error != nil { print(error!); return }
-
+            
             let user = User()
             
             //potential Craching!!! if keys don't match
             user.setValuesForKeys(values)
             
             self.messagesController?.setupNavBarWithUser(user: user)
-            
             self.dismiss(animated: true, completion: nil)
-            print("Saved user successfully into Firebase!")
         })
     }
 }

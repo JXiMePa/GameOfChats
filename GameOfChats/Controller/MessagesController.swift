@@ -22,7 +22,7 @@ final class MessagesController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Loggout", style: .plain, target: self, action: #selector(handleLoggout))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Loggout", style: .plain, target: self, action: #selector(handleLogout))
         
         let usersButton = UIBarButtonItem(image: #imageLiteral(resourceName: "new_message_icon"), style: .plain, target: self, action: #selector(handleNewMessage))
         // let chatLog = UIBarButtonItem(title: "Chat", style: .plain, target: self, action: #selector(showChatLogController))
@@ -36,54 +36,51 @@ final class MessagesController: UITableViewController {
     
     private func observeUserMessages() {
         
-        guard let uid = Auth.auth().currentUser?.uid else { return } // user ID
+        guard let uid = Auth.auth().currentUser?.uid else { return } // userID
         
         let ref = Database.database().reference().child("user_messages").child(uid)
         ref.observe(.childAdded, with: { [weak self] (snapshot) in
+            
             let userId = snapshot.key
             Database.database().reference().child("user_messages").child(uid).child(userId).observe(.childAdded, with: { [weak self] (snapshot) in
                 
-                let messageReference = Database.database().reference().child("messages").child(snapshot.key)
-                messageReference.observeSingleEvent(of: .value, with: { (snapshot) in
-                    
-                    if let dictionary = snapshot.value as? [String: AnyObject] {
-                        let message = Message()
-                        
-                        //potential Craching!!! if keys don't match
-                        message.setValuesForKeys(dictionary)
-                        
-                        if let chatPartnerId = message.chatPartnerId() {
-                            self?.groupMessage[chatPartnerId] = message
-                            
-                            guard let value = self?.groupMessage.values else { return }
-                            self?.messages = Array(value)
-                            
-                            //Potentially crash - "!", but message must have timestamp.
-                            self?.messages.sort { $0.timestamp!.int32Value > $1.timestamp!.int32Value
-                            }
-                        }
-                        self?.attemptReloadOfTable()
-                        ///------------------
-                        //MARK: FIX!..  it will wait 0.1 sec if not cancel reload Table
-                        self?.timer?.invalidate()
-                        self?.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self!, selector: #selector(self?.handleReloadTable), userInfo: nil, repeats: false)
-                        ///------------------
-                    }
-                    
-            }, withCancel: nil)
+                let messageId = snapshot.key
+                self?.fetchMessageWithMessageId(messageId)
                 
-            }, withCancel: nil)
+                }, withCancel: nil)
             
             }, withCancel: nil)
     }
     
-    private func attemptReloadOfTable() {
+    private func fetchMessageWithMessageId(_ messageId: String) {
         
+        let messageReference = Database.database().reference().child("messages").child(messageId)
+        messageReference.observeSingleEvent(of: .value, with: { [weak self] (snapshot) in
+            
+            if let dictionary = snapshot.value as? [String: AnyObject] {
+                let message = Message(dictionary: dictionary)
+                
+                if let chatPartnerId = message.chatPartnerId() {
+                    self?.groupMessage[chatPartnerId] = message
+                }
+                
+                self?.attemptReloadOfTable()
+            }
+        }, withCancel: nil)
+    }
+    
+    private func attemptReloadOfTable() {
+        //MARK: FIX!..  it will wait 0.1 sec if not cancel reload Table
+        self.timer?.invalidate()
+        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
     }
     
     @objc private func handleReloadTable() {
+        self.messages = Array(self.groupMessage.values)
+        self.messages.sort { $0.timestamp!.int32Value > $1.timestamp!.int32Value } //"!"
+        
         DispatchQueue.main.async {
-            //            print("Test Reload Table")
+            //print("Table reload count test ")
             self.tableView.reloadData()
         }
     }
@@ -91,7 +88,7 @@ final class MessagesController: UITableViewController {
     private func checkUserIsLoggedIn() {
         
         if Auth.auth().currentUser?.uid == nil {
-            performSelector(onMainThread: #selector(handleLoggout), with: nil, waitUntilDone: false)
+            performSelector(onMainThread: #selector(handleLogout), with: nil, waitUntilDone: false)
             
         } else {
             fetchUserAndSetupNavBarTitle()
@@ -124,17 +121,19 @@ final class MessagesController: UITableViewController {
         
         let titleView = UIView()
         let containerView = UIView()
+        
         titleView.addSubview(containerView)
+        _ = containerView.anchor(centerX: titleView.centerXAnchor, centerY: titleView.centerYAnchor)
         
         let profileImageView = CustomImageView()
         profileImageView.contentMode = .scaleAspectFill
         profileImageView.layer.cornerRadius = 20
         profileImageView.clipsToBounds = true
+        
         if let profileImageUrl = user.profileImageUrl {
-            profileImageView.loadImageWithUrl(profileImageUrl)
+        profileImageView.loadImageWithUrl(profileImageUrl)
             
-            containerView.addSubview(profileImageView)
-            
+             containerView.addSubview(profileImageView)
             _ = profileImageView.anchor(left: containerView.leftAnchor, centerY: containerView.centerYAnchor, widthConstant: 40, heightConstant: 40)
         }
         
@@ -143,8 +142,6 @@ final class MessagesController: UITableViewController {
         
         containerView.addSubview(nameLabel)
         _ = nameLabel.anchor(left: profileImageView.rightAnchor, right: containerView.rightAnchor, centerY: profileImageView.centerYAnchor, leftConstant: 8, heightConstant: 40)
-        
-        _ = containerView.anchor(centerX: titleView.centerXAnchor, centerY: titleView.centerYAnchor)
         
         self.navigationItem.titleView = titleView
     }
@@ -167,21 +164,19 @@ final class MessagesController: UITableViewController {
         present(navCoontroller, animated: true, completion: nil)
     }
     
-    @objc private func handleLoggout() {
+    @objc private func handleLogout() {
         
         do {
             try Auth.auth().signOut()
-            
-        } catch let loggoutError {
-            print("loggoutError: ", loggoutError)
+        } catch let logoutError {
+            print("logout Error: ", logoutError)
         }
         
         let loginController = LoginController()
         loginController.messagesController = self //3
         present(loginController, animated: true, completion: nil)
     }
-    
-}//end
+}
 
 extension MessagesController {
     
@@ -201,7 +196,6 @@ extension MessagesController {
             user.setValuesForKeys(dictionary)
             
             self?.showChatLogControllerForUser(user)
-            
             }, withCancel: nil)
     }
     

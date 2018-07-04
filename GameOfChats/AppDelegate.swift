@@ -25,8 +25,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.makeKeyAndVisible()
         window?.rootViewController = UINavigationController(rootViewController: MessagesController())
         
-        application.statusBarStyle = .lightContent
-        
         return true
     }
 
