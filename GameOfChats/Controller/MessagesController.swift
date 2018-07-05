@@ -32,6 +32,8 @@ final class MessagesController: UITableViewController {
         navigationItem.rightBarButtonItems = [usersButton]
         
         checkUserIsLoggedIn()
+        
+        tableView.allowsMultipleSelectionDuringEditing = true //*1 del
     }
     
     private func observeUserMessages() {
@@ -50,6 +52,13 @@ final class MessagesController: UITableViewController {
                 }, withCancel: nil)
             
             }, withCancel: nil)
+        
+        ref.observe(.childRemoved) { [weak self] (snapshot)  in
+            
+            self?.groupMessage.removeValue(forKey: snapshot.key)
+            self?.attemptReloadOfTable()
+        }
+        
     }
     
     private func fetchMessageWithMessageId(_ messageId: String) {
@@ -179,6 +188,34 @@ final class MessagesController: UITableViewController {
 }
 
 extension MessagesController {
+    //*3 del
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        let message  = self.messages[indexPath.row]
+        guard let partnerId = message.chatPartnerId() else { return }
+        
+        Database.database().reference().child("user_messages").child(uid).child(partnerId).removeValue { (error, reference) in
+            
+            if error != nil {
+                print("Failed deleate Message: \(error as Any)")
+                return
+            }
+            
+            self.groupMessage.removeValue(forKey: partnerId)
+            self.attemptReloadOfTable()
+            
+//           //wrong way  ------
+//            self.messages.remove(at: indexPath.row)
+//            self.tableView.deleteRows(at: [indexPath], with: .automatic)
+//            //--------------
+            
+        }
+    }
+    //*2 del
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         

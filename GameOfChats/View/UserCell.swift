@@ -6,8 +6,6 @@
 //  Copyright © 2018 Tarasenko Jurik. All rights reserved.
 //
 
-
-
 import UIKit
 import Firebase
 import FirebaseDatabase
@@ -59,7 +57,7 @@ class UserCell: UITableViewCell {
                         self?.profileImageView.loadImageWithUrl(profileImageUrl)
                     }
                 }
-                }, withCancel: nil)
+            }, withCancel: nil)
         }
     }
     
